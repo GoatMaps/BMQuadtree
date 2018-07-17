@@ -1,9 +1,9 @@
 import XCTest
 
 #if !os(macOS)
-public func allTests() -> [XCTestCaseEntry] {
-    return [
-        testCase(BMQuadtreeTests.allTests),
-    ]
-}
+//public func allTests() -> [XCTestCaseEntry] {
+//    return [
+//        testCase(BMQuadtreeTests.allTests),
+//    ]
+//}
 #endif
