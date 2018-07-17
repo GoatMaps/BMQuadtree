@@ -9,6 +9,7 @@
 import Foundation
 import GameplayKit
 
+@available(OSX 10.12, *)
 public class BMQuadtreeNode <T: AnyObject>: GKQuadtreeNode {
   weak public var tree: BMQuadtree<T>?
 
@@ -62,6 +63,7 @@ extension GKQuad {
 /// A tree data structure where each level has 4 children that subdivide a 
 /// given space into the four quadrants.
 /// Stores arbitrary data of any class via points and quads.
+@available(OSX 10.12, *)
 final public class BMQuadtree <T: AnyObject> {
 
   /// Typealias to use for objects stored in the tree
@@ -114,13 +116,9 @@ final public class BMQuadtree <T: AnyObject> {
 
     // We check the minCellSize to see if the object still fits and that the
     // tree has no leafs. If it has, the point goes into the leafs.
-    if Float(self.objects.count) < self.minCellSize,
-      self.hasQuads == false {
-      if self.depth > 10 {
-        log.debug("QuadTree depth", element, self.depth, self.minCellSize)
-      }
-      self.objects.append((element, point))
-      return BMQuadtreeNode(tree: self)
+    if Float(self.objects.count) < self.minCellSize, self.hasQuads == false {
+        self.objects.append((element, point))
+        return BMQuadtreeNode(tree: self)
     }
 
     // Otherwise, subdivide and add the point to whichever child will accept it
@@ -207,7 +205,7 @@ final public class BMQuadtree <T: AnyObject> {
     }
 
     if self.hasQuads == false {
-      elements = self.objects.flatMap({ $0.0 })
+      elements = self.objects.compactMap({ $0.0 })
     } else {
       elements.append(contentsOf: self.northWest!.elements(at: point))
       elements.append(contentsOf: self.northEast!.elements(at: point))
@@ -239,7 +237,7 @@ final public class BMQuadtree <T: AnyObject> {
       elements = self
         .objects
         .filter({ quad.contains($0.1) })
-        .flatMap({ $0.0 })
+        .compactMap({ $0.0 })
     } else {
       elements.append(contentsOf: self.northWest!.elements(in: quad))
       elements.append(contentsOf: self.northEast!.elements(in: quad))

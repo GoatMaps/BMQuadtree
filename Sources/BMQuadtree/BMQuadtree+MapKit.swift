@@ -17,10 +17,10 @@ extension GKQuad {
   ///
   /// - Parameter offset: Offset in meters.
   public init(location: CLLocation, offset: CLLocationDistance) {
-    let region = MKCoordinateRegionMakeWithDistance(
-      location.coordinate,
-      offset,
-      offset)
+    let region = MKCoordinateRegion(
+      center: location.coordinate,
+      latitudinalMeters: offset,
+      longitudinalMeters: offset)
 
     let min = float2(
       Float(location.coordinate.latitude - region.span.latitudeDelta),
@@ -41,7 +41,7 @@ extension MKOverlay {
   /// Returns the minX and minY coordinates of the overlays quad.
   /// Used for settung up the quadtree of the map objects.
   public var quadMin: float2 {
-    let region = MKCoordinateRegionForMapRect(self.boundingMapRect)
+    let region = MKCoordinateRegion(self.boundingMapRect)
 
     let centerX = region.center.latitude
     let centerY = region.center.longitude
@@ -56,7 +56,7 @@ extension MKOverlay {
   /// Returns the maxX and maxY coordinates of the overlays quad.
   /// Used for settung up the quadtree of the map objects.
   public var quadMax: float2 {
-    let region = MKCoordinateRegionForMapRect(self.boundingMapRect)
+    let region = MKCoordinateRegion(self.boundingMapRect)
 
     let centerX = region.center.latitude
     let centerY = region.center.longitude
@@ -91,6 +91,7 @@ extension CLLocation {
   }
 }
 
+@available(OSX 10.12, *)
 extension BMQuadtree {
 
   // MARK: - Debug

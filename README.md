@@ -19,10 +19,7 @@ The implementation is using [Axis-Aligned Bounding Boxed (AABB)](https://en.wiki
 
 ## TODO
 
-* [ ] Dependency managers (cocoapods, carthage, swiftpm)
 * [ ] Unify/clean-up after removing object from tree
-* [ ] Add object to quadtree with a given quad
-* [ ] Remove object from the given quadtree node
 
 ## Creating A Tree
 
@@ -41,7 +38,9 @@ cell size, for instance 3.
 ## Adding And Removing Elements
 
 ```swift
-  let location = CLLocation(latitude: item.latitude, longitude: item.longitude)
+  let location = CLLocation(
+    latitude: item.latitude, 
+    longitude: item.longitude)
   tree.add(location, at: float2(item.latitude, item.longitude))
 ```
 
@@ -120,7 +119,9 @@ let vector = vienna.vector
 ```
 
 ```swift
-let vienna = CLLocationCoordinate2DMake(latitude: 48.21128, longitude: 16.364537)
+let vienna = CLLocationCoordinate2DMake(
+  latitude: 48.21128, 
+  longitude: 16.364537)
 let vector = vienna.vector
 ```
 
