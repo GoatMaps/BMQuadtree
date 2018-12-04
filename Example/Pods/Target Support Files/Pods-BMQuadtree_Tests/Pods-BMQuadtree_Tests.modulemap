@@ -1,6 +1,0 @@
-framework module Pods_BMQuadtree_Tests {
-  umbrella header "Pods-BMQuadtree_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}
