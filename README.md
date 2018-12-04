@@ -1,6 +1,6 @@
 # BMQuadtree
 
-[![CI Status](https://img.shields.io/travis/Adam Eri/BMQuadtree.svg?style=flat)](https://travis-ci.org/blackmirror-media/BMQuadtree)
+[![CI Status](https://img.shields.io/travis/blackmirror-media/BMQuadtree.svg?style=flat)](https://travis-ci.org/blackmirror-media/BMQuadtree)
 [![Version](https://img.shields.io/cocoapods/v/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
 [![License](https://img.shields.io/cocoapods/l/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
 [![Platform](https://img.shields.io/cocoapods/p/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
