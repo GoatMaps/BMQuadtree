@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import GameplayKit
 import CoreLocation
 import MapKit
 import simd
 
-extension GKQuad {
+extension BMQuad {
   /// Returns a region around the location with the specified offset in meters.
   ///
   /// - Parameter offset: Offset in meters.
   public init(location: CLLocation, offset: CLLocationDistance) {
-    let region = MKCoordinateRegion(
+    let region = MKCoordinateRegion.init(
       center: location.coordinate,
       latitudinalMeters: offset,
       longitudinalMeters: offset)
@@ -41,7 +40,7 @@ extension MKOverlay {
   /// Returns the minX and minY coordinates of the overlays quad.
   /// Used for settung up the quadtree of the map objects.
   public var quadMin: float2 {
-    let region = MKCoordinateRegion(self.boundingMapRect)
+    let region = MKCoordinateRegion.init(self.boundingMapRect)
 
     let centerX = region.center.latitude
     let centerY = region.center.longitude
@@ -56,7 +55,7 @@ extension MKOverlay {
   /// Returns the maxX and maxY coordinates of the overlays quad.
   /// Used for settung up the quadtree of the map objects.
   public var quadMax: float2 {
-    let region = MKCoordinateRegion(self.boundingMapRect)
+    let region = MKCoordinateRegion.init(self.boundingMapRect)
 
     let centerX = region.center.latitude
     let centerY = region.center.longitude
@@ -70,8 +69,8 @@ extension MKOverlay {
 
   /// Returns the bounding quad of the overlay.
   /// Used for settung up the quadtree of the map objects.
-  public var boundingQuad: GKQuad {
-    return GKQuad(quadMin: self.quadMin, quadMax: self.quadMax)
+  public var boundingQuad: BMQuad {
+    return BMQuad(quadMin: self.quadMin, quadMax: self.quadMax)
   }
 }
 

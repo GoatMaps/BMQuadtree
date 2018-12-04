@@ -1,0 +1,6 @@
+framework module BMQuadtree {
+  umbrella header "BMQuadtree-umbrella.h"
+
+  export *
+  module * { export * }
+}

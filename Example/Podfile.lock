@@ -1,0 +1,16 @@
+PODS:
+  - BMQuadtree (0.1.0)
+
+DEPENDENCIES:
+  - BMQuadtree (from `../`)
+
+EXTERNAL SOURCES:
+  BMQuadtree:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BMQuadtree: f3ea002a6cac7e2b408467a0b5774bad0ceef72c
+
+PODFILE CHECKSUM: 08ca9872a43c67b6eb2ad2c949c40f49d54bc1c0
+
+COCOAPODS: 1.6.0.beta.2

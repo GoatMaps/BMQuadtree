@@ -175,3 +175,4 @@ final class BMQuadtreeTests: XCTestCase {
     [37.25151, -121.96479]
   ]
 }
+
