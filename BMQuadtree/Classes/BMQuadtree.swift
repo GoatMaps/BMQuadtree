@@ -7,55 +7,7 @@
 //
 
 import Foundation
-import GameplayKit
-
-@available(OSX 10.12, *)
-public class BMQuadtreeNode <T: AnyObject>: GKQuadtreeNode {
-  weak public var tree: BMQuadtree<T>?
-
-  public init(tree: BMQuadtree<T>) {
-    self.tree = tree
-    super.init()
-  }
-}
-
-extension GKQuad {
-
-  /// Checks if the point specified is within this quad.
-  ///
-  /// - Parameter point: the point to query
-  /// - Returns: Returns true if the point specified is within this quad.
-  public func contains(_ point: vector_float2) -> Bool {
-
-    // Above lower left corner
-    let gtMin = (point.x >= self.quadMin.x && point.y >= self.quadMin.y)
-
-    // Below upper right coner
-    let leMax = (point.x <= self.quadMax.x && point.y <= self.quadMax.y)
-
-    // If both is true, the point is inside the quad.
-    return (gtMin && leMax)
-  }
-
-  /// Checks if the specified quad intersects with self.
-  ///
-  /// - Parameter quad: the quad to query
-  /// - Returns: Returns true if the quad intersects
-  public func intersects(_ quad: GKQuad) -> Bool {
-
-    if self.quadMin.x > quad.quadMax.x ||
-      self.quadMin.y > quad.quadMax.y {
-      return false
-    }
-
-    if self.quadMax.x < quad.quadMin.x ||
-      self.quadMax.y < quad.quadMin.y {
-      return false
-    }
-
-    return true
-  }
-}
+import simd
 
 /// The BMQuadtree is an almost drop-in replacement for the GKQuadtree,
 /// as that one is reportedly not working as of iOS10.
@@ -63,14 +15,13 @@ extension GKQuad {
 /// A tree data structure where each level has 4 children that subdivide a 
 /// given space into the four quadrants.
 /// Stores arbitrary data of any class via points and quads.
-@available(OSX 10.12, *)
 final public class BMQuadtree <T: AnyObject> {
 
   /// Typealias to use for objects stored in the tree
   public typealias Object = (T, vector_float2)
 
   // Bounding quad
-  var quad: GKQuad
+  var quad: BMQuad
 
   /// Child Quad Trees
   var northWest: BMQuadtree?
@@ -89,7 +40,7 @@ final public class BMQuadtree <T: AnyObject> {
   private var maximumDepth: Int64
 
   public init(
-    boundingQuad quad: GKQuad,
+    boundingQuad quad: BMQuad,
     minimumCellSize minCellSize: Float = 1,
     maximumDepth: Int64 = 10) {
     self.quad = quad
@@ -222,7 +173,7 @@ final public class BMQuadtree <T: AnyObject> {
   /// - Parameter quad: the quad you want to test
   /// - Returns: an NSArray of all the elements in all of the nodes that
   /// intersect the given quad
-  public func elements(in quad: GKQuad) -> [T] {
+  public func elements(in quad: BMQuad) -> [T] {
 
     var elements: [T] = []
 
@@ -462,19 +413,19 @@ final public class BMQuadtree <T: AnyObject> {
     let deltaX = maxX - minX
     let deltaY = maxY - minY
 
-    let quadNW = GKQuad(
+    let quadNW = BMQuad(
       quadMin: float2(minX, minY + deltaY / 2),
       quadMax: float2(maxX - deltaX / 2, maxY))
 
-    let quadNE = GKQuad(
+    let quadNE = BMQuad(
       quadMin: float2(minX + deltaX / 2, minY + deltaY / 2),
       quadMax: float2(maxX, maxY))
 
-    let quadSW = GKQuad(
+    let quadSW = BMQuad(
       quadMin: float2(minX, minY),
       quadMax: float2(minX + deltaX / 2, minY + deltaY / 2))
 
-    let quadSE = GKQuad(
+    let quadSE = BMQuad(
       quadMin: float2(minX + deltaX / 2, minY),
       quadMax: float2(maxX, maxY - deltaY / 2))
 

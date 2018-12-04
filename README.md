@@ -1,5 +1,10 @@
 # BMQuadtree
 
+[![CI Status](https://img.shields.io/travis/blackmirror-media/BMQuadtree.svg?style=flat)](https://travis-ci.org/blackmirror-media/BMQuadtree)
+[![Version](https://img.shields.io/cocoapods/v/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
+[![License](https://img.shields.io/cocoapods/l/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
+[![Platform](https://img.shields.io/cocoapods/p/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
+
 Swift implementation of a Quadtree. A drop-in replacement for GameplayKit's 
 GKQuadtree [for it is not working properly](https://forums.developer.apple.com/thread/53458).
 
@@ -28,8 +33,8 @@ a minimum cell size and a maximum depth.
 
 ```swift
 let tree = BMQuadtree(
-  boundingQuad: boundingQuad,
-  minimumCellSize: 3)
+boundingQuad: boundingQuad,
+minimumCellSize: 3)
 ```
 
 By default, the minimum cell size is 1, but it does make sense to use a larger
@@ -38,14 +43,14 @@ cell size, for instance 3.
 ## Adding And Removing Elements
 
 ```swift
-  let location = CLLocation(
-    latitude: item.latitude, 
-    longitude: item.longitude)
-  tree.add(location, at: float2(item.latitude, item.longitude))
+let location = CLLocation(
+latitude: item.latitude, 
+longitude: item.longitude)
+tree.add(location, at: float2(item.latitude, item.longitude))
 ```
 
 ```swift
-  tree.remove(location)
+tree.remove(location)
 ```
 
 ## Searching For Elements
@@ -61,9 +66,9 @@ search.
 
 ```swift
 let nearestOfType: CLLocation? =
-  tree.element(
-  	nearestTo: float2(0, 0), 
-  	type: CLLocation.self) as? CLLocation
+tree.element(
+nearestTo: float2(0, 0), 
+type: CLLocation.self) as? CLLocation
 ```
 
 All of the elements in the quadtree node this point would be placed in.
@@ -78,8 +83,8 @@ the points in the quad.
 
 ```swift
 let searchQuad = GKQuad(
-	quadMin: float2(-10, -10), 
-	quadMax: float2(10, 10))
+quadMin: float2(-10, -10), 
+quadMax: float2(10, 10))
 
 let elementInQuad = tree.elements(in: searchQuad)
 ```
@@ -120,8 +125,8 @@ let vector = vienna.vector
 
 ```swift
 let vienna = CLLocationCoordinate2DMake(
-  latitude: 48.21128, 
-  longitude: 16.364537)
+latitude: 48.21128, 
+longitude: 16.364537)
 let vector = vienna.vector
 ```
 
@@ -158,7 +163,7 @@ numberOfNodes ^ maximumDepth * minCellSize
 
 ```swift
 let largeTree = BMQuadtree(
-  boundingQuad: largeOverlay.boundingQuad,
-  minimumCellSize: 10,
-  maximumDepth: 100)
+boundingQuad: largeOverlay.boundingQuad,
+minimumCellSize: 10,
+maximumDepth: 100)
 ```
