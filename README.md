@@ -1,6 +1,6 @@
 # BMQuadtree
 
-[![CI Status](https://img.shields.io/travis/blackmirror-media/BMQuadtree.svg?style=flat)](https://travis-ci.com/blackmirror-media/BMQuadtree)
+[![Build Status](https://travis-ci.com/blackmirror-media/BMQuadtree.svg?branch=develop)](https://travis-ci.com/blackmirror-media/BMQuadtree)
 [![Version](https://img.shields.io/cocoapods/v/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
 [![License](https://img.shields.io/cocoapods/l/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
 [![Platform](https://img.shields.io/cocoapods/p/BMQuadtree.svg?style=flat)](https://cocoapods.org/pods/BMQuadtree)
@@ -9,7 +9,7 @@ Swift implementation of a Quadtree. A drop-in replacement for GameplayKit's
 GKQuadtree [for it is not working properly](https://forums.developer.apple.com/thread/53458).
 
 A quadtree manages its structure to optimize for spatial searches—unlike a basic 
-data structure such as an array or dictionary, a quadtree can find all elements 
+data structure such as an array or dictionary, a quadtree can find all elements
 occupying a specific position or region very quickly. The quadtree partitioning 
 strategy divides space into four quadrants at each level, as illustrated in
 Figure 1. When a quadrant contains more than one object, the tree subdivides 
