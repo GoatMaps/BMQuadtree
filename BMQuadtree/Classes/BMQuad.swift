@@ -17,6 +17,11 @@ public struct BMQuad: Equatable {
     /// The upper-right coordinate of the element
     public var quadMax: vector_float2
 
+    public init(quadMin: vector_float2, quadMax: vector_float2) {
+        self.quadMin = quadMin
+        self.quadMax = quadMax
+    }
+
     public static func == (lhs: BMQuad, rhs: BMQuad) -> Bool {
         return lhs.quadMin == rhs.quadMin && lhs.quadMax == rhs.quadMax
     }
