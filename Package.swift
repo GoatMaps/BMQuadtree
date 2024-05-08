@@ -15,7 +15,7 @@ let package = Package(
         .target(
             name: "BMQuadTree",
             dependencies: [], 
-            path: "BMQuadTree/Classes",
+            path: "BMQuadTree/Classes"
         )
     ]
 )
