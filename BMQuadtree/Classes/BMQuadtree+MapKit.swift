@@ -6,115 +6,118 @@
 //  Copyright © 2017 Bikemap GmbH. Apache License 2.0
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 import MapKit
 import simd
 
-extension BMQuad {
-  /// Returns a region around the location with the specified offset in meters.
-  ///
-  /// - Parameter offset: Offset in meters.
-  public init(location: CLLocation, offset: CLLocationDistance) {
-    let region = MKCoordinateRegion.init(
-      center: location.coordinate,
-      latitudinalMeters: offset,
-      longitudinalMeters: offset)
+public extension BMQuad {
+    /// Returns a region around the location with the specified offset in meters.
+    ///
+    /// - Parameter offset: Offset in meters.
+    init(location: CLLocation, offset: CLLocationDistance) {
+        let region = MKCoordinateRegion(
+            center: location.coordinate,
+            latitudinalMeters: offset,
+            longitudinalMeters: offset
+        )
 
-    let min = float2(
-      Float(location.coordinate.latitude - region.span.latitudeDelta),
-      Float(location.coordinate.longitude - region.span.longitudeDelta)
-    )
+        let min = SIMD2<Float>(
+            Float(location.coordinate.latitude - region.span.latitudeDelta),
+            Float(location.coordinate.longitude - region.span.longitudeDelta)
+        )
 
-    let max = float2(
-      Float(location.coordinate.latitude + region.span.latitudeDelta),
-      Float(location.coordinate.longitude + region.span.longitudeDelta)
-    )
+        let max = SIMD2<Float>(
+            Float(location.coordinate.latitude + region.span.latitudeDelta),
+            Float(location.coordinate.longitude + region.span.longitudeDelta)
+        )
 
-    self.init(quadMin: min, quadMax: max)
-  }
+        self.init(quadMin: min, quadMax: max)
+    }
 }
 
-extension MKOverlay {
+public extension MKOverlay {
+    /// Returns the minX and minY coordinates of the overlays quad.
+    /// Used for settung up the quadtree of the map objects.
+    var quadMin: SIMD2<Float> {
+        let region = MKCoordinateRegion(boundingMapRect)
 
-  /// Returns the minX and minY coordinates of the overlays quad.
-  /// Used for settung up the quadtree of the map objects.
-  public var quadMin: float2 {
-    let region = MKCoordinateRegion.init(self.boundingMapRect)
+        let centerX = region.center.latitude
+        let centerY = region.center.longitude
+        let spanX = region.span.latitudeDelta
+        let spanY = region.span.longitudeDelta
 
-    let centerX = region.center.latitude
-    let centerY = region.center.longitude
-    let spanX = region.span.latitudeDelta
-    let spanY = region.span.longitudeDelta
+        return SIMD2<Float>(
+            Float(centerX - spanX),
+            Float(centerY - spanY)
+        )
+    }
 
-    return float2(
-      Float(centerX - spanX),
-      Float(centerY - spanY))
-  }
+    /// Returns the maxX and maxY coordinates of the overlays quad.
+    /// Used for settung up the quadtree of the map objects.
+    var quadMax: SIMD2<Float> {
+        let region = MKCoordinateRegion(boundingMapRect)
 
-  /// Returns the maxX and maxY coordinates of the overlays quad.
-  /// Used for settung up the quadtree of the map objects.
-  public var quadMax: float2 {
-    let region = MKCoordinateRegion.init(self.boundingMapRect)
+        let centerX = region.center.latitude
+        let centerY = region.center.longitude
+        let spanX = region.span.latitudeDelta
+        let spanY = region.span.longitudeDelta
 
-    let centerX = region.center.latitude
-    let centerY = region.center.longitude
-    let spanX = region.span.latitudeDelta
-    let spanY = region.span.longitudeDelta
+        return SIMD2<Float>(
+            Float(centerX + spanX),
+            Float(centerY + spanY)
+        )
+    }
 
-    return float2(
-      Float(centerX + spanX),
-      Float(centerY + spanY))
-  }
-
-  /// Returns the bounding quad of the overlay.
-  /// Used for settung up the quadtree of the map objects.
-  public var boundingQuad: BMQuad {
-    return BMQuad(quadMin: self.quadMin, quadMax: self.quadMax)
-  }
+    /// Returns the bounding quad of the overlay.
+    /// Used for settung up the quadtree of the map objects.
+    var boundingQuad: BMQuad {
+        return BMQuad(quadMin: quadMin, quadMax: quadMax)
+    }
 }
 
-extension CLLocationCoordinate2D {
-  public var vector: vector_float2 {
-    return float2(
-      Float(self.latitude),
-      Float(self.longitude))
-  }
+public extension CLLocationCoordinate2D {
+    var vector: vector_float2 {
+        return SIMD2<Float>(
+            Float(latitude),
+            Float(longitude)
+        )
+    }
 }
 
-extension CLLocation {
-  public var vector: vector_float2 {
-    return float2(
-      Float(self.coordinate.latitude),
-      Float(self.coordinate.longitude))
-  }
+public extension CLLocation {
+    var vector: vector_float2 {
+        return SIMD2<Float>(
+            Float(coordinate.latitude),
+            Float(coordinate.longitude)
+        )
+    }
 }
 
 @available(OSX 10.12, *)
-extension BMQuadtree {
+public extension BMQuadtree {
+    // MARK: - Debug
 
-  // MARK: - Debug
+    var debugOverlay: [MKPolygon] {
+        let minx = CLLocationDegrees(quad.quadMin.x)
+        let miny = CLLocationDegrees(quad.quadMin.y)
+        let maxx = CLLocationDegrees(quad.quadMax.x)
+        let maxy = CLLocationDegrees(quad.quadMax.y)
+        let topLeft = CLLocationCoordinate2D(latitude: minx, longitude: maxy)
+        let bottomLeft = CLLocationCoordinate2D(latitude: minx, longitude: miny)
+        let topRight = CLLocationCoordinate2D(latitude: maxx, longitude: maxy)
+        let bottomRight = CLLocationCoordinate2D(latitude: maxx, longitude: miny)
+        let coords = [topLeft, bottomLeft, bottomRight, topRight]
+        let treePolygon = MKPolygon(coordinates: coords, count: coords.count)
+        var polygons: [MKPolygon] = [treePolygon]
 
-  public var debugOverlay: [MKPolygon] {
-    let minx = CLLocationDegrees(self.quad.quadMin.x)
-    let miny = CLLocationDegrees(self.quad.quadMin.y)
-    let maxx = CLLocationDegrees(self.quad.quadMax.x)
-    let maxy = CLLocationDegrees(self.quad.quadMax.y)
-    let topLeft = CLLocationCoordinate2D(latitude: minx, longitude: maxy)
-    let bottomLeft = CLLocationCoordinate2D(latitude: minx, longitude: miny)
-    let topRight = CLLocationCoordinate2D(latitude: maxx, longitude: maxy)
-    let bottomRight = CLLocationCoordinate2D(latitude: maxx, longitude: miny)
-    let coords = [topLeft, bottomLeft, bottomRight, topRight]
-    let treePolygon = MKPolygon(coordinates: coords, count: coords.count)
-    var polygons: [MKPolygon] = [treePolygon]
+        if hasQuads == true {
+            polygons.append(contentsOf: northWest!.debugOverlay)
+            polygons.append(contentsOf: northEast!.debugOverlay)
+            polygons.append(contentsOf: southWest!.debugOverlay)
+            polygons.append(contentsOf: northEast!.debugOverlay)
+        }
 
-    if self.hasQuads == true {
-      polygons.append(contentsOf: self.northWest!.debugOverlay)
-      polygons.append(contentsOf: self.northEast!.debugOverlay)
-      polygons.append(contentsOf: self.southWest!.debugOverlay)
-      polygons.append(contentsOf: self.northEast!.debugOverlay)
+        return polygons
     }
-
-    return polygons
-  }
 }

@@ -10,49 +10,49 @@ import simd
 
 /// Representation of an axis aligned quad via its min corner (lower-left)
 /// and max corner (upper-right)
-public struct BMQuad {
+public struct BMQuad: Equatable {
+    /// The lower-left coordinate of the element
+    public var quadMin: vector_float2
 
-  /// The lower-left coordinate of the element
-  public var quadMin: vector_float2
+    /// The upper-right coordinate of the element
+    public var quadMax: vector_float2
 
-  /// The upper-right coordinate of the element
-  public var quadMax: vector_float2
+    public static func == (lhs: BMQuad, rhs: BMQuad) -> Bool {
+        return lhs.quadMin == rhs.quadMin && lhs.quadMax == rhs.quadMax
+    }
 }
 
-extension BMQuad {
+public extension BMQuad {
+    /// Checks if the point specified is within this quad.
+    ///
+    /// - Parameter point: the point to query
+    /// - Returns: Returns true if the point specified is within this quad.
+    func contains(_ point: vector_float2) -> Bool {
+        // Above lower left corner
+        let gtMin = (point.x >= quadMin.x && point.y >= quadMin.y)
 
-  /// Checks if the point specified is within this quad.
-  ///
-  /// - Parameter point: the point to query
-  /// - Returns: Returns true if the point specified is within this quad.
-  public func contains(_ point: vector_float2) -> Bool {
+        // Below upper right coner
+        let leMax = (point.x <= quadMax.x && point.y <= quadMax.y)
 
-    // Above lower left corner
-    let gtMin = (point.x >= self.quadMin.x && point.y >= self.quadMin.y)
-
-    // Below upper right coner
-    let leMax = (point.x <= self.quadMax.x && point.y <= self.quadMax.y)
-
-    // If both is true, the point is inside the quad.
-    return (gtMin && leMax)
-  }
-
-  /// Checks if the specified quad intersects with self.
-  ///
-  /// - Parameter quad: the quad to query
-  /// - Returns: Returns true if the quad intersects
-  public func intersects(_ quad: BMQuad) -> Bool {
-
-    if self.quadMin.x > quad.quadMax.x ||
-      self.quadMin.y > quad.quadMax.y {
-      return false
+        // If both is true, the point is inside the quad.
+        return gtMin && leMax
     }
 
-    if self.quadMax.x < quad.quadMin.x ||
-      self.quadMax.y < quad.quadMin.y {
-      return false
-    }
+    /// Checks if the specified quad intersects with self.
+    ///
+    /// - Parameter quad: the quad to query
+    /// - Returns: Returns true if the quad intersects
+    func intersects(_ quad: BMQuad) -> Bool {
+        if quadMin.x > quad.quadMax.x ||
+            quadMin.y > quad.quadMax.y {
+            return false
+        }
 
-    return true
-  }
+        if quadMax.x < quad.quadMin.x ||
+            quadMax.y < quad.quadMin.y {
+            return false
+        }
+
+        return true
+    }
 }

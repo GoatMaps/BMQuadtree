@@ -15,19 +15,18 @@ import Foundation
  to a tree. Keep references to the corresponding nodes so you can use them
  for better performance when accessing or removing elements.
  */
-public class BMQuadtreeNode <T: AnyObject> {
+public class BMQuadtreeNode<T: AnyObject> {
+    /// The weakly references tree within this BMQuadtreeNode
+    public weak var tree: BMQuadtree<T>?
 
-  /// The weakly references tree within this BMQuadtreeNode
-  weak public var tree: BMQuadtree<T>?
+    /// The axis-aligned bounding rectangle represented by the node.
+    public var quad: BMQuad
 
-  /// The axis-aligned bounding rectangle represented by the node.
-  public var quad: BMQuad
-
-  /// Initialises and returns a BMQuadtreeNode.
-  ///
-  /// - Parameter tree: The tree stored in this node.
-  public init(tree: BMQuadtree<T>) {
-    self.tree = tree
-    self.quad = tree.quad
-  }
+    /// Initialises and returns a BMQuadtreeNode.
+    ///
+    /// - Parameter tree: The tree stored in this node.
+    public init(tree: BMQuadtree<T>) {
+        self.tree = tree
+        quad = tree.quad
+    }
 }
